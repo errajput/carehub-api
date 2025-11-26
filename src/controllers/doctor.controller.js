@@ -10,17 +10,28 @@ export const listDoctors = async (req, res) => {
     const filter = { active: true };
 
     if (specialization) filter.specialization = specialization;
+
     if (q) filter.$text = { $search: q };
 
     const doctors = await DoctorProfile.find(filter)
-      .skip((page - 1) * limit)
+      .skip((page - 1) * Number(limit))
       .limit(Number(limit))
-      .populate("user", "name");
+      .populate("user", "name email");
 
-    res.json(doctors);
+    const total = await DoctorProfile.countDocuments(filter);
+
+    res.json({
+      success: true,
+      data: doctors,
+      pagination: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+      },
+    });
   } catch (err) {
     console.error("listDoctors Error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -36,11 +47,10 @@ export const getDoctor = async (req, res) => {
 
     if (!doctor) return res.status(404).json({ message: "Doctor not found" });
 
-    // TODO: Add avg rating & next slots (optional)
-    res.json(doctor);
+    res.json({ success: true, data: doctor });
   } catch (err) {
     console.error("getDoctor Error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -63,10 +73,10 @@ export const createDoctor = async (req, res) => {
     user.role = "doctor";
     await user.save();
 
-    res.status(201).json(doctor);
+    res.status(201).json({ success: true, data: doctor });
   } catch (err) {
     console.error("createDoctor Error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -79,10 +89,12 @@ export const updateDoctor = async (req, res) => {
       new: true,
     });
 
-    res.json(updated);
+    if (!updated) return res.status(404).json({ message: "Doctor not found" });
+
+    res.json({ success: true, data: updated });
   } catch (err) {
     console.error("updateDoctor Error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -91,12 +103,14 @@ export const deleteDoctor = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await DoctorProfile.findByIdAndDelete(id);
+    const doctor = await DoctorProfile.findByIdAndDelete(id);
 
-    res.json({ ok: true });
+    if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+
+    res.json({ success: true, message: "Doctor deleted" });
   } catch (err) {
     console.error("deleteDoctor Error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -109,16 +123,18 @@ export const setAvailability = async (req, res) => {
     if (!Array.isArray(slots))
       return res.status(400).json({ message: "Slots must be an array" });
 
-    const created = await AvailabilitySlot.insertMany(
-      slots.map((slot) => ({
-        doctor: id,
-        ...slot,
-      }))
-    );
+    const formatted = slots.map((slot) => ({
+      doctor: id,
+      start: slot.start,
+      end: slot.end,
+      recurring: slot.recurring || null,
+    }));
 
-    res.status(201).json(created);
+    const created = await AvailabilitySlot.insertMany(formatted);
+
+    res.status(201).json({ success: true, data: created });
   } catch (err) {
     console.error("setAvailability Error:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

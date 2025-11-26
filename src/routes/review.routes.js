@@ -1,13 +1,17 @@
-import express from "express";
-const router = express.Router();
-
+import { Router } from "express";
 import auth from "../middlewares/auth.middleware.js";
+import { validate } from "../middlewares/validate.js";
+
 import {
   createReview,
   listForDoctor,
 } from "../controllers/review.controller.js";
+import { createReviewSchema } from "../validators/review.validation.js";
 
-router.post("/", auth, createReview);
-router.get("/doctor/:doctorId", listForDoctor);
+const router = Router();
+
+router.get("/:doctorId", listForDoctor);
+
+router.post("/", auth, validate(createReviewSchema), createReview);
 
 export default router;

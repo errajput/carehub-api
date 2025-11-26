@@ -1,35 +1,48 @@
 import Review from "../models/Review.js";
 
+// ========================== CREATE REVIEW ==========================
 export const createReview = async (req, res) => {
-  const { doctorId, rating, comment } = req.body;
-  const patientId = req.user.id;
+  try {
+    const { doctorId, rating, comment } = req.body;
+    const patientId = req.user.id;
 
-  const existing = await Review.findOne({
-    doctor: doctorId,
-    patient: patientId,
-  });
+    // Check duplicate review
+    const existing = await Review.findOne({
+      doctor: doctorId,
+      patient: patientId,
+    });
 
-  if (existing) {
-    return res.status(400).json({ message: "Already reviewed" });
+    if (existing) {
+      return res.status(400).json({ message: "Already reviewed" });
+    }
+
+    const review = await Review.create({
+      doctor: doctorId,
+      patient: patientId,
+      rating,
+      comment,
+    });
+
+    res.status(201).json(review);
+  } catch (err) {
+    console.error("createReview Error:", err);
+    res.status(500).json({ message: "Server error" });
   }
-
-  const review = await Review.create({
-    doctor: doctorId,
-    patient: patientId,
-    rating,
-    comment,
-  });
-
-  res.status(201).json(review);
 };
 
+// ========================== LIST REVIEWS FOR DOCTOR ==========================
 export const listForDoctor = async (req, res) => {
-  const { doctorId } = req.params;
+  try {
+    const { doctorId } = req.params;
 
-  const reviews = await Review.find({ doctor: doctorId }).populate(
-    "patient",
-    "name"
-  );
+    const reviews = await Review.find({ doctor: doctorId }).populate(
+      "patient",
+      "name"
+    );
 
-  res.json(reviews);
+    res.json(reviews);
+  } catch (err) {
+    console.error("listForDoctor Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
