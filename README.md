@@ -5,7 +5,7 @@ MONGO_URI=...
 JWT_SECRET=...
 
 Clone the repository
-git clone https://github.com/errajput/CareHub-API.git
+git clone https://github.com/errajput/careHub-api.git
 cd CareHub-API
 
 Install & Run:
