@@ -1,6 +1,4 @@
-import { Router } from "express";
-import auth from "../middlewares/auth.middleware.js";
-import role from "../middlewares/role.middleware.js";
+import express from "express";
 import {
   bookAppointment,
   listByDoctor,
@@ -10,23 +8,35 @@ import {
   setStatus,
 } from "../controllers/appointment.controller.js";
 
-const router = Router();
+import { validate } from "../middlewares/validate.js";
+import {
+  bookAppointmentSchema,
+  cancelAppointmentParams,
+  listByDoctorParams,
+  listByDoctorQuery,
+  requestRescheduleBody,
+  setStatusBody,
+} from "../validators/appointment.validator.js";
 
-router.post("/book", auth, role("patient"), bookAppointment);
+const router = express.Router();
 
-router.get("/doctor/:doctorId", auth, role(["admin", "doctor"]), listByDoctor);
-
+router.post("/", validate(bookAppointmentSchema), bookAppointment);
 router.get(
-  "/patient/:patientId",
-  auth,
-  role(["admin", "patient"]),
-  listByPatient
+  "/doctor/:doctorId",
+  validate({ params: listByDoctorParams, query: listByDoctorQuery }),
+  listByDoctor
 );
-
-router.put("/:id/cancel", auth, cancelAppointment);
-
-router.put("/:id/reschedule", auth, requestReschedule);
-
-router.put("/:id/status", auth, role(["admin", "doctor"]), setStatus);
+router.get("/patient/:patientId", listByPatient);
+router.patch(
+  "/:id/cancel",
+  validate(cancelAppointmentParams),
+  cancelAppointment
+);
+router.patch(
+  "/:id/reschedule",
+  validate(requestRescheduleBody),
+  requestReschedule
+);
+router.patch("/:id/status", validate(setStatusBody), setStatus);
 
 export default router;

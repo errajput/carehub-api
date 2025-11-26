@@ -1,30 +1,17 @@
-import mongoose from "mongoose";
+import { z } from "zod";
 
-const AppointmentSchema = new mongoose.Schema(
-  {
-    doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "DoctorProfile",
-      required: true,
-    },
-    patient: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    start: { type: Date, required: true },
-    end: { type: Date, required: true },
-    reason: { type: String },
-    status: {
-      type: String,
-      enum: ["pending", "confirmed", "cancelled", "completed"],
-      default: "pending",
-    },
-  },
-  { timestamps: true }
-);
+export const AppointmentSchema = z.object({
+  doctor: z.string().min(1, "Doctor ID is required"),
+  patient: z.string().min(1, "Patient ID is required"),
+  start: z.coerce.date({
+    required_error: "Start time is required",
+    invalid_type_error: "Invalid date format for start",
+  }),
+  end: z.coerce.date({
+    required_error: "End time is required",
+    invalid_type_error: "Invalid date format for end",
+  }),
+  reason: z.string().optional(),
 
-// Helpful index to speed up overlap queries
-AppointmentSchema.index({ doctor: 1, start: 1, end: 1 });
-
-export default mongoose.model("Appointment", AppointmentSchema);
+  status: z.enum(["pending", "confirmed", "cancelled", "completed"]).optional(),
+});
