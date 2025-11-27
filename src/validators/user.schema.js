@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// ==================== REGISTER ====================
+//  REGISTER
 export const registerSchema = z.object({
   body: z.object({
     name: z.string().min(3, "Name must be at least 3 characters"),
@@ -13,7 +13,7 @@ export const registerSchema = z.object({
   query: z.object({}).optional(),
 });
 
-// ==================== LOGIN ====================
+//  LOGIN
 export const loginSchema = z.object({
   body: z.object({
     email: z.string().email("Invalid email"),
@@ -24,7 +24,7 @@ export const loginSchema = z.object({
   query: z.object({}).optional(),
 });
 
-// ==================== REFRESH TOKEN ====================
+//  REFRESH TOKEN
 export const refreshSchema = z.object({
   body: z.object({
     refreshToken: z.string().min(10, "Refresh token required"),
@@ -34,7 +34,7 @@ export const refreshSchema = z.object({
   query: z.object({}).optional(),
 });
 
-// ==================== LOGOUT ====================
+//  LOGOUT
 export const logoutSchema = z.object({
   body: z.object({
     refreshToken: z.string().min(10, "Refresh token required"),
@@ -44,7 +44,7 @@ export const logoutSchema = z.object({
   query: z.object({}).optional(),
 });
 
-// ==================== UPDATE PROFILE ====================
+//  UPDATE PROFILE
 export const updateUserSchema = z.object({
   body: z.object({
     name: z.string().min(3).optional(),
@@ -55,7 +55,7 @@ export const updateUserSchema = z.object({
   query: z.object({}).optional(),
 });
 
-// ==================== CHANGE PASSWORD ====================
+//  CHANGE PASSWORD
 export const changePasswordSchema = z.object({
   body: z.object({
     oldPassword: z.string().min(6),

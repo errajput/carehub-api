@@ -18,7 +18,7 @@ function signRefresh(user) {
   });
 }
 
-// ======================= REGISTER =======================
+//  REGISTER
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -50,7 +50,7 @@ export const register = async (req, res) => {
   }
 };
 
-// ======================= LOGIN =======================
+//LOGIN
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -83,7 +83,7 @@ export const login = async (req, res) => {
   }
 };
 
-// ======================= REFRESH TOKEN =======================
+//REFRESH TOKEN
 export const refresh = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -105,7 +105,7 @@ export const refresh = async (req, res) => {
   }
 };
 
-// ======================= LOGOUT =======================
+// LOGOUT
 export const logout = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -125,5 +125,56 @@ export const logout = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).json({ message: "Invalid token" });
+  }
+};
+
+//  Update
+export const updateUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // from your authMiddleware
+    const { name, email } = req.body;
+
+    const updates = {};
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: updates },
+      { new: true }
+    ).select("-password -refreshToken");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//  CHANGE PASSWORD
+export const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { oldPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch)
+      return res.status(400).json({ message: "Old password is incorrect" });
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };
