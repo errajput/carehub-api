@@ -1,7 +1,7 @@
 import AvailabilitySlot from "../models/AvailabilitySlot.js";
 import DoctorProfile from "../models/DoctorProfile.js";
 
-// ========================== CHECK OVERLAP ==========================
+// CHECK OVERLAP
 async function hasOverlap(doctorId, start, end, ignoreId = null) {
   const query = {
     doctor: doctorId,
@@ -14,7 +14,7 @@ async function hasOverlap(doctorId, start, end, ignoreId = null) {
   return AvailabilitySlot.exists(query);
 }
 
-// ========================== CREATE SLOT ==========================
+//  CREATE SLOT
 export const createAvailability = async (req, res) => {
   try {
     const { doctor, start, end, recurring } = req.body;
@@ -41,7 +41,7 @@ export const createAvailability = async (req, res) => {
   }
 };
 
-// ========================== GET SLOTS BY DOCTOR ==========================
+// GET SLOTS BY DOCTOR
 export const getAvailabilityByDoctor = async (req, res) => {
   try {
     const { doctorId } = req.params;
@@ -64,7 +64,7 @@ export const getAvailabilityByDoctor = async (req, res) => {
   }
 };
 
-// ========================== UPDATE SLOT ==========================
+//  UPDATE SLOT
 export const updateAvailability = async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,7 +99,7 @@ export const updateAvailability = async (req, res) => {
   }
 };
 
-// ========================== DELETE SLOT ==========================
+// DELETE SLOT
 export const deleteAvailability = async (req, res) => {
   try {
     const { id } = req.params;
