@@ -1,12 +1,10 @@
-# Doctor Appointment Backend
-
-ENV:
-MONGO_URI=...
-JWT_SECRET=...
+# carehub-api
 
 Clone the repository
-git clone https://github.com/errajput/careHub-api.git
-cd CareHub-API
+git clone https://github.com/errajput/carehub-api.git
+cd careHub-api
+
+copy .example.env from .evn and Update MONGO_URI
 
 Install & Run:
 npm install
