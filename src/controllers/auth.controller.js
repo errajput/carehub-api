@@ -18,6 +18,25 @@ function signRefresh(user) {
   });
 }
 
+// GET ALL USERS
+export const getAllUsers = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const users = await User.find().select("-password -refreshToken").lean();
+
+    res.json({
+      count: users.length,
+      users,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 //  REGISTER
 export const register = async (req, res) => {
   try {
@@ -132,11 +151,10 @@ export const logout = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const userId = req.user.id; // from your authMiddleware
-    const { name, email } = req.body;
+    const { name } = req.body;
 
     const updates = {};
     if (name) updates.name = name;
-    if (email) updates.email = email;
 
     const user = await User.findByIdAndUpdate(
       userId,

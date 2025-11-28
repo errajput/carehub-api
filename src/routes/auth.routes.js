@@ -8,6 +8,7 @@ import {
   logout,
   changePassword,
   updateUser,
+  getAllUsers,
 } from "../controllers/auth.controller.js";
 
 import {
@@ -19,9 +20,11 @@ import {
   updateUserSchema,
 } from "../validators/user.schema.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
+import roleMiddleware from "../middlewares/role.middleware.js";
 
 const router = Router();
 
+router.get("/", authMiddleware, roleMiddleware(["admin"]), getAllUsers);
 router.post("/register", validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
 router.post("/refresh", validate(refreshSchema), refresh);
