@@ -9,7 +9,7 @@ const AvailabilitySlotSchema = new mongoose.Schema(
     },
     start: { type: Date, required: true },
     end: { type: Date, required: true },
-    recurring: { type: String }, // e.g., "WEEKLY" or null
+    recurring: { type: String },
   },
   { timestamps: true }
 );

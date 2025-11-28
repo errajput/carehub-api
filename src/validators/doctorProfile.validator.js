@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// ========================= CREATE =========================
+// CREATE
 export const createDoctorSchema = z.object({
   body: z.object({
     user: z.string().min(1, "User ID required"),
@@ -12,7 +12,7 @@ export const createDoctorSchema = z.object({
   }),
 });
 
-// ========================= UPDATE =========================
+//  UPDATE
 export const updateDoctorSchema = z.object({
   body: z.object({
     specialization: z.string().min(2).optional(),
@@ -26,7 +26,7 @@ export const updateDoctorSchema = z.object({
   }),
 });
 
-// ========================= PARAMS ONLY =========================
+//  PARAMS ONLY
 export const doctorIdParamSchema = z.object({
   params: z.object({
     id: z.string().min(1),

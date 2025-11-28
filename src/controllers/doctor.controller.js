@@ -2,7 +2,7 @@ import DoctorProfile from "../models/DoctorProfile.js";
 import AvailabilitySlot from "../models/AvailabilitySlot.js";
 import User from "../models/User.js";
 
-// ========================== LIST DOCTORS ==========================
+// LIST DOCTORS
 export const listDoctors = async (req, res) => {
   try {
     const { specialization, q, page = 1, limit = 20 } = req.query;
@@ -35,7 +35,7 @@ export const listDoctors = async (req, res) => {
   }
 };
 
-// ========================== GET DOCTOR ==========================
+//  GET DOCTOR
 export const getDoctor = async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,7 +54,7 @@ export const getDoctor = async (req, res) => {
   }
 };
 
-// ========================== CREATE DOCTOR ==========================
+//  CREATE DOCTOR
 export const createDoctor = async (req, res) => {
   try {
     const { userId, specialization, fees, experience, bio } = req.body;
@@ -80,7 +80,7 @@ export const createDoctor = async (req, res) => {
   }
 };
 
-// ========================== UPDATE DOCTOR ==========================
+//  UPDATE DOCTOR
 export const updateDoctor = async (req, res) => {
   try {
     const { id } = req.params;
@@ -98,7 +98,7 @@ export const updateDoctor = async (req, res) => {
   }
 };
 
-// ========================== DELETE DOCTOR ==========================
+//  DELETE DOCTOR
 export const deleteDoctor = async (req, res) => {
   try {
     const { id } = req.params;
@@ -114,7 +114,7 @@ export const deleteDoctor = async (req, res) => {
   }
 };
 
-// ========================== SET AVAILABILITY ==========================
+//  SET AVAILABILITY
 export const setAvailability = async (req, res) => {
   try {
     const { id } = req.params; // doctor profile id

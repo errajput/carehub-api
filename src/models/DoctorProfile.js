@@ -16,5 +16,4 @@ const DoctorProfileSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Export using ES Modules
 export default mongoose.model("DoctorProfile", DoctorProfileSchema);
