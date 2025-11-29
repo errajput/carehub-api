@@ -57,12 +57,13 @@ export const getDoctor = async (req, res) => {
 //  CREATE DOCTOR
 export const createDoctor = async (req, res) => {
   try {
-    const { userId, specialization, fees, experience, bio } = req.body;
+    const { img, userId, specialization, fees, experience, bio } = req.body;
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const doctor = await DoctorProfile.create({
+      img,
       user: userId,
       specialization,
       fees,

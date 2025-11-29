@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const DoctorProfileSchema = new mongoose.Schema(
   {
+    img: { type: String },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
