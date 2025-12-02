@@ -15,7 +15,7 @@ import {
 } from "../validators/appointment.validator.js";
 
 import { z } from "zod";
-import { AppointmentSchema } from "../models/Appointment.js";
+import Appointment from "../models/Appointment.js";
 
 // ========================== BOOK APPOINTMENT ==========================
 export const bookAppointment = async (req, res) => {
@@ -42,7 +42,7 @@ export const bookAppointment = async (req, res) => {
         throw { status: 409, message: "Slot already booked" };
       }
 
-      const appointment = await Appointment.create(
+      const appointment = await AppointmentSchema.create(
         [
           {
             doctor: doctorId,
