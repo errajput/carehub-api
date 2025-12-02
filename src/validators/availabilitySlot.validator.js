@@ -40,8 +40,10 @@ export const doctorIdParams = z.object({
 });
 
 // ========================== QUERY FILTERS ==========================
-export const slotQuerySchema = z.object({
-  from: z.string().datetime().optional(),
-  to: z.string().datetime().optional(),
-  recurring: recurringEnum,
-});
+export const slotQuerySchema = z
+  .object({
+    from: z.string().datetime().optional(),
+    to: z.string().datetime().optional(),
+    recurring: recurringEnum.optional(),
+  })
+  .optional();

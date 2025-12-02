@@ -31,7 +31,7 @@ export const bookAppointment = async (req, res) => {
     if (!doctor) return res.status(404).json({ message: "Doctor not found" });
 
     await session.withTransaction(async () => {
-      const overlap = await AppointmentSchema.findOne({
+      const overlap = await Appointment.findOne({
         doctor: doctorId,
         status: { $ne: "cancelled" },
         start: { $lt: new Date(end) },
@@ -42,7 +42,7 @@ export const bookAppointment = async (req, res) => {
         throw { status: 409, message: "Slot already booked" };
       }
 
-      const appointment = await AppointmentSchema.create(
+      const appointment = await Appointment.create(
         [
           {
             doctor: doctorId,

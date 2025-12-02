@@ -21,22 +21,27 @@ import {
 const router = express.Router();
 
 router.post("/", validate(bookAppointmentSchema), bookAppointment);
+
 router.get(
   "/doctor/:doctorId",
   validate({ params: listByDoctorParams, query: listByDoctorQuery }),
   listByDoctor
 );
+
 router.get("/patient/:patientId", listByPatient);
+
 router.patch(
   "/:id/cancel",
   validate(cancelAppointmentParams),
   cancelAppointment
 );
+
 router.patch(
   "/:id/reschedule",
   validate(requestRescheduleBody),
   requestReschedule
 );
+
 router.patch("/:id/status", validate(setStatusBody), setStatus);
 
 export default router;

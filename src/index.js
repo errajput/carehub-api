@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 import doctorRoutes from "./routes/doctor.routes.js";
 import appointmentRoutes from "./routes/appointment.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
+import availabilityRoutes from "./routes/availability.routes.js";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || "CareHub-API";
@@ -37,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/availability", availabilityRoutes);
 
 // 404 Route
 app.use((req, res) => {

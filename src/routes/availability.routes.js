@@ -18,6 +18,7 @@ import {
 
 import auth from "../middlewares/auth.middleware.js";
 import role from "../middlewares/role.middleware.js";
+import z from "zod";
 
 const router = express.Router();
 
@@ -54,10 +55,12 @@ router.delete(
 // Everyone can see doctor's available slots
 router.get(
   "/doctor/:doctorId",
-  validate({
-    params: doctorIdParams,
-    query: slotQuerySchema,
-  }),
+  validate(
+    z.object({
+      params: doctorIdParams,
+      query: slotQuerySchema,
+    })
+  ),
   getAvailabilityByDoctor
 );
 
