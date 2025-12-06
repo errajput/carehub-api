@@ -17,4 +17,9 @@ const DoctorProfileSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+DoctorProfileSchema.index({
+  specialization: "text",
+  bio: "text",
+});
+
 export default mongoose.model("DoctorProfile", DoctorProfileSchema);

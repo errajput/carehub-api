@@ -9,16 +9,41 @@ export const listDoctors = async (req, res) => {
 
     const filter = { active: true };
 
-    if (specialization) filter.specialization = specialization;
+    // Handle specialization filter
+    if (specialization) {
+      filter.specialization = specialization;
+    }
 
-    if (q) filter.$text = { $search: q };
+    let doctors;
+    let total;
 
-    const doctors = await DoctorProfile.find(filter)
-      .skip((page - 1) * Number(limit))
-      .limit(Number(limit))
-      .populate("user", "name email");
+    // If there's a search query, we need to search in the User collection
+    if (q) {
+      // Find users whose names match the query
+      const matchingUsers = await User.find({
+        name: { $regex: q, $options: "i" }, // Case-insensitive search
+      }).select("_id");
 
-    const total = await DoctorProfile.countDocuments(filter);
+      const userIds = matchingUsers.map((user) => user._id);
+
+      // Find doctors whose user is in the matching users
+      filter.user = { $in: userIds };
+
+      doctors = await DoctorProfile.find(filter)
+        .skip((page - 1) * Number(limit))
+        .limit(Number(limit))
+        .populate("user", "name email");
+
+      total = await DoctorProfile.countDocuments(filter);
+    } else {
+      // No search query, just filter by specialization and active status
+      doctors = await DoctorProfile.find(filter)
+        .skip((page - 1) * Number(limit))
+        .limit(Number(limit))
+        .populate("user", "name email");
+
+      total = await DoctorProfile.countDocuments(filter);
+    }
 
     res.json({
       success: true,
