@@ -9,6 +9,7 @@ import {
   changePassword,
   updateUser,
   getAllUsers,
+  deleteAccount,
 } from "../controllers/auth.controller.js";
 
 import {
@@ -38,4 +39,5 @@ router.patch(
   changePassword
 );
 
+router.delete("/delete-account", authMiddleware, deleteAccount);
 export default router;

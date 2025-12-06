@@ -196,3 +196,31 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// Delete Account
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Delete user's appointments
+    await Appointment.deleteMany({ patient: userId });
+
+    // Delete user's reviews
+    await Review.deleteMany({ patient: userId });
+
+    // If doctor, delete doctor profile and availability
+    const doctorProfile = await DoctorProfile.findOne({ user: userId });
+    if (doctorProfile) {
+      await AvailabilitySlot.deleteMany({ doctor: doctorProfile._id });
+      await DoctorProfile.deleteOne({ user: userId });
+    }
+
+    // Finally delete user
+    await User.findByIdAndDelete(userId);
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.error("deleteAccount Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
