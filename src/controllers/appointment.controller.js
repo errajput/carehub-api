@@ -17,7 +17,7 @@ import {
 import { z } from "zod";
 import Appointment from "../models/Appointment.js";
 
-// ========================== BOOK APPOINTMENT ==========================
+//  BOOK APPOINTMENT
 export const bookAppointment = async (req, res) => {
   try {
     // ---- Zod validation ----
@@ -74,7 +74,7 @@ export const bookAppointment = async (req, res) => {
   }
 };
 
-// ========================== LIST BY DOCTOR ==========================
+//  LIST BY DOCTOR
 export const listByDoctor = async (req, res) => {
   try {
     listByDoctorParams.parse(req.params);
@@ -104,7 +104,7 @@ export const listByDoctor = async (req, res) => {
   }
 };
 
-// ========================== LIST BY PATIENT ==========================
+// LIST BY PATIENT
 export const listByPatient = async (req, res) => {
   try {
     listByPatientParams.parse(req.params);
@@ -125,7 +125,7 @@ export const listByPatient = async (req, res) => {
   }
 };
 
-// ========================== CANCEL APPOINTMENT ==========================
+//CANCEL APPOINTMENT
 export const cancelAppointment = async (req, res) => {
   try {
     cancelAppointmentParams.parse(req.params);
@@ -156,7 +156,7 @@ export const cancelAppointment = async (req, res) => {
   }
 };
 
-// ========================== REQUEST RESCHEDULE ==========================
+// REQUEST RESCHEDULE
 export const requestReschedule = async (req, res) => {
   try {
     requestRescheduleParams.parse(req.params);
@@ -188,7 +188,7 @@ export const requestReschedule = async (req, res) => {
   }
 };
 
-// ========================== SET STATUS ==========================
+//SET STATUS
 export const setStatus = async (req, res) => {
   try {
     setStatusParams.parse(req.params);

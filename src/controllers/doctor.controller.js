@@ -55,8 +55,14 @@ export const listDoctors = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("listDoctors Error:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    logger.error("listDoctors Error:", {
+      error: err.message,
+      stack: err.stack,
+    });
+    res.status(500).json({
+      message: "Failed to load doctors",
+      error: process.env.NODE_ENV === "development" ? err.message : undefined,
+    });
   }
 };
 
